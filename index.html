@@ -5,8 +5,38 @@
   </head>
   
   <body>
-    <h1>Hello World!</h1>  
-    
-    <p>Welcome to my website!</p> 
-  </body>
+    <form id="userInputForm">
+        <div id="inputFields"></div> <!-- Container to hold the dynamically generated inputs -->
+        <button type="button" onclick="addInput()">Add Inputs</button>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        function addInput() {
+            var inputContainer = document.getElementById("inputFields");
+            var numInputs = 24; // Number of inputs you want to add
+
+            // Loop to create and append input fields
+            for (var i = 1; i <= numInputs; i++) {
+                var label = document.createElement("label");
+                if(i < 10){
+                	label.textContent = "0" + i + ":   ";
+                }
+               	else
+                {
+                	label.textContent = i + ":   ";
+                }
+                
+                var input = document.createElement("input");
+                input.type = "number";
+                input.id = "myNumber" + i;
+                input.value = i * 2; // Set default value (you can change this as needed)
+
+                inputContainer.appendChild(label);
+                inputContainer.appendChild(input);
+                inputContainer.appendChild(document.createElement("br"));
+            }
+        }
+    </script>
+</body>
 </html>
