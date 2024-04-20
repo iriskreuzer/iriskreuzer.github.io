@@ -1,17 +1,20 @@
 <!DOCTYPE html> 
 <html>
-  <head>
+<head>
     <title>Homepage</title>
-  </head>
+</head>
   
-  <body>
+<body onload="addInput()">
     <form id="userInputForm">
         <div id="inputFields"></div> <!-- Container to hold the dynamically generated inputs -->
-        <button type="button" onclick="addInput()">Add Inputs</button>
-        <button type="submit">Submit</button>
+        <button type="button" onclick="submit()">Submit</button>
     </form>
 
+    <div id="output"></div> <!-- Container to display the array content -->
+
     <script>
+        var userInputArray = []; // Array to store user input
+
         function addInput() {
             var inputContainer = document.getElementById("inputFields");
             var numInputs = 24; // Number of inputs you want to add
@@ -19,23 +22,60 @@
             // Loop to create and append input fields
             for (var i = 1; i <= numInputs; i++) {
                 var label = document.createElement("label");
-                if(i < 10){
-                	label.textContent = "0" + i + ":   ";
-                }
-               	else
-                {
-                	label.textContent = i + ":   ";
-                }
-                
                 var input = document.createElement("input");
-                input.type = "number";
-                input.id = "myNumber" + i;
-                input.value = i * 2; // Set default value (you can change this as needed)
+
+                input.type = "text";
+                input.id = "myText" + i;
+                input.placeholder = "Name";
 
                 inputContainer.appendChild(label);
                 inputContainer.appendChild(input);
+
+                var space = document.createTextNode(" "); // Add space between text input and number input
+                inputContainer.appendChild(space);
+
+                var numberInput = document.createElement("input");
+                numberInput.type = "number";
+                numberInput.id = "myNumber" + i;
+                numberInput.value = 0;
+
+                inputContainer.appendChild(numberInput);
                 inputContainer.appendChild(document.createElement("br"));
             }
+        }
+
+        function submit() {
+            userInputArray = []; // Clear the array before adding new values
+
+            // Loop through each input field, retrieve values, and store in the array
+            for (var i = 1; i <= 24; i++) {
+                var textInputValue = document.getElementById("myText" + i).value;
+                var numberInputValue = document.getElementById("myNumber" + i).value;
+                
+                // Create an object with both text and number input values
+                var inputObject = {
+                    text: textInputValue,
+                    number: numberInputValue
+                };
+
+                userInputArray.push(inputObject);
+            }
+
+            // Now userInputArray contains all the user inputs
+
+            // Clear previous output
+            var outputContainer = document.getElementById("output");
+            outputContainer.innerHTML = "";
+
+            // Create HTML to display the array content
+            var outputHTML = "<h2>User Input Array:</h2><ul>";
+            userInputArray.forEach(function(item) {
+                outputHTML += "<li>" + item.text + " - " + item.number + "</li>";
+            });
+            outputHTML += "</ul>";
+
+            // Display the array content on the screen
+            outputContainer.innerHTML = outputHTML;
         }
     </script>
 </body>
