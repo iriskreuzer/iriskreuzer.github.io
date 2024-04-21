@@ -16,7 +16,7 @@
         <div id="number-fields">
             <!-- Number Input Fields -->
         </div>
-        <button type="submit">Add Data</button>
+        <button type="submit">Add Data</button> 
     </form>
     <hr>
     <h2>Display Data</h2>
@@ -27,83 +27,55 @@
         const TEAM_SIZE = 4
         let totalSum = 0
         let teamA = []
-        let teamB = []
         let teamSum = 0
         let goalStrengthPerTeam = 0
-        let inputData = [];
 
         // Function to update display
         function updateDisplay() {
             let displayDiv = document.getElementById('display-data');
             displayDiv.innerHTML = '';
 
-            // Display text and number data
-            displayDiv.innerHTML += '<h3>Data:</h3>';
-            inputData.forEach(item => {
-                displayDiv.innerHTML += `<p> ${item.text}: ${item.number}</p>`;
+            // Display text data
+            displayDiv.innerHTML += '<h3>Text Data:</h3>';
+            textData.forEach(item => {
+                displayDiv.innerHTML += `<p>${item}</p>`;
             });
 
+            // Display number data
+            displayDiv.innerHTML += '<h3>Number Data:</h3>';
+            numberData.forEach(item => {
+                displayDiv.innerHTML += `<p>${item}</p>`;
+            });
             displayDiv.innerHTML += '<h3>Sum:</h3>';
             displayDiv.innerHTML += `<p>${totalSum}</p>`;
-            displayDiv.innerHTML += '<h3>Team sum:</h3>';
-            displayDiv.innerHTML += `<p>${teamSum}</p>`;
 
             displayDiv.innerHTML += '<h3>Team A:</h3>';
             teamA.forEach(item => {
-                displayDiv.innerHTML += `<p> ${item.text}: ${item.number}</p>`;
+                displayDiv.innerHTML += `<p>${item}</p>`;
             });
-
-            displayDiv.innerHTML += '<h3>Team B:</h3>';
-            teamB.forEach(item => {
-                displayDiv.innerHTML += `<p>${item.text}: ${item.number}</p>`;
-            });
-        }
-
-        function timeout_print() {
-            let displayDiv = document.getElementById('display-data');
-            displayDiv.innerHTML = '';
-
-            displayDiv.innerHTML += '<h3>[ERROR] Timeout: Equal separation probably impossible</h3>';
         }
 
         function calculateResult() {
-            inputData.forEach(item => {
-                totalSum += item.number;
+            numberData.forEach(item => {
+                totalSum += item
             });
-            if (totalSum % 2 == 1) // uneven number
-            {
-                totalSum--;
-            }
             goalStrengthPerTeam = totalSum / 2;
-
 
             teamSum = 0;
             teamA = []
-            timeout = 0
             while (teamSum != goalStrengthPerTeam) {
-                timeout++;
-                if (timeout >= 1000) {
-                    timeout_print();
-                    return;
-                }
                 for (let i = 0; i < TEAM_SIZE; i++) {
                     if (teamSum > goalStrengthPerTeam) {
                         teamSum = 0;
                         teamA = [];
                         break;
                     }
-                    var randomNumber = Math.floor(Math.random() * inputData.length);
-                    while (teamA.includes(inputData[randomNumber])) {
-                        randomNumber = Math.floor(Math.random() * inputData.length);
+                    var randomNumber = Math.floor(Math.random() * 8);
+                    teamA.push(numberData[randomNumber]);
+
+                    for (let i = 0; i < teamA.length; i++) {
+                        teamSum += teamA[i];
                     }
-                    teamA.push(inputData[randomNumber]);
-                    teamSum += inputData[randomNumber].number;
-                }
-            }
-            teamB = []
-            for (let i = 0; i < inputData.length; i++) {
-                if (!teamA.includes(inputData[i])) {
-                    teamB.push(inputData[i]);
                 }
             }
             updateDisplay();
@@ -118,13 +90,11 @@
             const textInputs = form.querySelectorAll('input[type="text"]');
             const numberInputs = form.querySelectorAll('input[type="number"]');
 
-            // Store text and number data in single array
-            inputData = [];
-            for (let i = 0; i < textInputs.length; i++) {
-                const textValue = textInputs[i].value;
-                const numberValue = parseFloat(numberInputs[i].value);
-                inputData.push({ text: textValue, number: numberValue });
-            }
+            // Store text data
+            textData = Array.from(textInputs).map(input => input.value);
+
+            // Store number data
+            numberData = Array.from(numberInputs).map(input => parseFloat(input.value));
 
             // Update display
             calculateResult();
